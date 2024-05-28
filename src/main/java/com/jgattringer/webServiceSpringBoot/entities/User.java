@@ -5,23 +5,37 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+// Indicates that this class is an entity mapped to a database table
 @Entity
+// Specifies the name of the database table
 @Table(name = "tb_user")
 public class User implements Serializable {
+    // Serialization version UID to ensure version compatibility
     private static final long serialVersionUID = 1L;
 
+    // Primary key of the entity
     @Id
+    // Specifies the generation strategy for the primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // User's name
     private String name;
+
+    // User's email
     private String email;
+
+    // User's phone number
     private String phone;
+
+    // User's password
     private String password;
 
-    // need a empty constructor once we are using a framework
+    // Empty constructor required by some frameworks
     public User() {
     }
 
+    // Constructor with all fields
     public User(Long id, String name, String email, String phone, String password) {
         this.id = id;
         this.name = name;
@@ -29,6 +43,8 @@ public class User implements Serializable {
         this.phone = phone;
         this.password = password;
     }
+
+    // Getter and Setter methods for all fields
 
     public Long getId() {
         return id;
@@ -70,6 +86,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    // Overrides equals method to compare users by their IDs
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,11 +95,13 @@ public class User implements Serializable {
         return Objects.equals(id, user.id);
     }
 
+    // Overrides hashCode method to generate hash based on ID
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
     }
 
+    // Overrides toString method to provide a string representation of the User object
     @Override
     public String toString() {
         return "User{" +
