@@ -1,8 +1,11 @@
 package com.jgattringer.webServiceSpringBoot.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 // Indicates that this class is an entity mapped to a database table
@@ -30,6 +33,10 @@ public class User implements Serializable {
 
     // User's password
     private String password;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders = new ArrayList<>();
 
     // Empty constructor required by some frameworks
     public User() {
@@ -86,6 +93,9 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public List<Order> getOrders() {
+        return orders;
+    }
     // Overrides equals method to compare users by their IDs
     @Override
     public boolean equals(Object o) {
