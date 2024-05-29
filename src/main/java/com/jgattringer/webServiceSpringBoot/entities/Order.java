@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 // Indicates that this class is a JPA entity that will be mapped to a table in the database
 @Entity
@@ -34,6 +36,9 @@ public class Order implements Serializable {
     @JoinColumn(name = "client_id")
     private User client;
 
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
+
     // Default constructor required by JPA
     public Order() {}
 
@@ -43,6 +48,10 @@ public class Order implements Serializable {
         this.moment = moment;
         setOrderStatus(orderStatus);
         this.client = client;
+    }
+
+    public Set<OrderItem> getItems() {
+        return items;
     }
 
     // Getter and setter methods for all fields
@@ -94,4 +103,6 @@ public class Order implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+
 }
