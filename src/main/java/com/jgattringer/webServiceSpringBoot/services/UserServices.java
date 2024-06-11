@@ -2,6 +2,7 @@ package com.jgattringer.webServiceSpringBoot.services;
 
 import com.jgattringer.webServiceSpringBoot.entities.User;
 import com.jgattringer.webServiceSpringBoot.repositories.UserRepository;
+import com.jgattringer.webServiceSpringBoot.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +21,7 @@ public class UserServices {
 
     public User findByI(Long id) {
         Optional<User> obj = repository.findById(id);
-        return obj.get();
+        return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public User insert(User obj){
