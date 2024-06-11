@@ -100,7 +100,13 @@ public class Order implements Serializable {
         this.client = client;
     }
 
-
+    public Double getTotal(){
+        double sum = 0.0;
+        for (OrderItem x : items){
+            sum += x.getSubtotal();
+        }
+        return sum;
+    }
     // Overrides the equals method to compare orders by their IDs
     @Override
     public boolean equals(Object o) {
