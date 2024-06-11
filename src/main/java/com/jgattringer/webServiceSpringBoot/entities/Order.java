@@ -10,42 +10,45 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-// Indicates that this class is a JPA entity that will be mapped to a table in the database
+// Indica que esta classe é uma entidade JPA que será mapeada para uma tabela no banco de dados
 @Entity
-// Specifies the name of the table in the database
+// Especifica o nome da tabela no banco de dados
 @Table(name = "tb_order")
 public class Order implements Serializable {
-    // Ensures version compatibility for serialization
+    // Garante compatibilidade de versão para serialização
     private static final long serialVersionUID = 1L;
 
-    // Defines the id field as the primary key of the entity
+    // Define o campo 'id' como chave primária da entidade
     @Id
-    // Configures the strategy for generating the primary key value
+    // Configura a estratégia para geração do valor da chave primária
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Represents the moment of the order
-   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
+    // Representa o momento do pedido
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
 
-   private Integer orderStatus;
+    // Representa o status do pedido como um inteiro
+    private Integer orderStatus;
 
-    // Defines a many-to-one relationship with the User entity
+    // Define um relacionamento muitos-para-um com a entidade 'User'
     @ManyToOne
-    // Specifies the foreign key column name in the database table
+    // Especifica o nome da coluna de chave estrangeira na tabela do banco de dados
     @JoinColumn(name = "client_id")
     private User client;
 
+    // Define um relacionamento um-para-muitos com a entidade 'OrderItem'
     @OneToMany(mappedBy = "id.order")
     private Set<OrderItem> items = new HashSet<>();
 
+    // Define um relacionamento um-para-um com a entidade 'Payment'
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
 
-    // Default constructor required by JPA
+    // Construtor padrão exigido pelo JPA
     public Order() {}
 
-    // Constructor with all fields
+    // Construtor com todos os campos
     public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
         this.id = id;
         this.moment = moment;
@@ -53,19 +56,22 @@ public class Order implements Serializable {
         this.client = client;
     }
 
+    // Obtém o pagamento associado ao pedido
     public Payment getPayment() {
         return payment;
     }
 
+    // Define o pagamento associado ao pedido
     public void setPayment(Payment payment) {
         this.payment = payment;
     }
 
+    // Obtém o conjunto de itens de pedido associados a este pedido
     public Set<OrderItem> getItems() {
         return items;
     }
 
-    // Getter and setter methods for all fields
+    // Métodos getter e setter para todos os campos
     public Long getId() {
         return id;
     }
@@ -82,10 +88,12 @@ public class Order implements Serializable {
         this.moment = moment;
     }
 
+    // Obtém o status do pedido
     public OrderStatus getOrderStatus(){
         return OrderStatus.valueOf(orderStatus);
     }
 
+    // Define o status do pedido
     public void setOrderStatus(OrderStatus orderStatus){
         if(orderStatus  != null) {
             this.orderStatus = orderStatus.getCode();
@@ -100,6 +108,7 @@ public class Order implements Serializable {
         this.client = client;
     }
 
+    // Calcula o total do pedido somando os subtotais dos itens do pedido
     public Double getTotal(){
         double sum = 0.0;
         for (OrderItem x : items){
@@ -107,7 +116,8 @@ public class Order implements Serializable {
         }
         return sum;
     }
-    // Overrides the equals method to compare orders by their IDs
+
+    // Sobrescreve o método equals para comparar pedidos pelos seus IDs
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,11 +126,9 @@ public class Order implements Serializable {
         return Objects.equals(id, order.id);
     }
 
-    // Overrides the hashCode method to generate a hash based on the ID
+    // Sobrescreve o método hashCode para gerar um hash baseado no ID
     @Override
     public int hashCode() {
         return Objects.hash(id);
     }
-
-
 }

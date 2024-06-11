@@ -8,41 +8,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// Indicates that this class is an entity mapped to a database table
+// Indica que esta classe é uma entidade JPA que será mapeada para uma tabela no banco de dados
 @Entity
-// Specifies the name of the database table
+// Especifica o nome da tabela no banco de dados
 @Table(name = "tb_user")
 public class User implements Serializable {
-    // Serialization version UID to ensure version compatibility
+    // UID de versão de serialização para garantir compatibilidade de versão
     private static final long serialVersionUID = 1L;
 
-    // Primary key of the entity
+    // Chave primária da entidade
     @Id
-    // Specifies the generation strategy for the primary key
+    // Especifica a estratégia de geração para a chave primária
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // User's name
+    // Nome do usuário
     private String name;
 
-    // User's email
+    // E-mail do usuário
     private String email;
 
-    // User's phone number
+    // Número de telefone do usuário
     private String phone;
 
-    // User's password
+    // Senha do usuário
     private String password;
 
+    // Lista de pedidos associados ao usuário, ignorada na serialização JSON para evitar referência cíclica
     @JsonIgnore
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
 
-    // Empty constructor required by some frameworks
+    // Construtor vazio exigido por alguns frameworks
     public User() {
     }
 
-    // Constructor with all fields
+    // Construtor com todos os campos
     public User(Long id, String name, String email, String phone, String password) {
         this.id = id;
         this.name = name;
@@ -51,7 +52,7 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    // Getter and Setter methods for all fields
+    // Métodos getter e setter para todos os campos
 
     public Long getId() {
         return id;
@@ -96,7 +97,8 @@ public class User implements Serializable {
     public List<Order> getOrders() {
         return orders;
     }
-    // Overrides equals method to compare users by their IDs
+
+    // Sobrescreve o método equals para comparar usuários pelos seus IDs
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,13 +107,13 @@ public class User implements Serializable {
         return Objects.equals(id, user.id);
     }
 
-    // Overrides hashCode method to generate hash based on ID
+    // Sobrescreve o método hashCode para gerar um hash baseado no ID
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
     }
 
-    // Overrides toString method to provide a string representation of the User object
+    // Sobrescreve o método toString para fornecer uma representação de string do objeto User
     @Override
     public String toString() {
         return "User{" +
